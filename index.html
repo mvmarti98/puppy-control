@@ -735,9 +735,13 @@ function renderDashboard(){
       <div style="font-size:0.48rem;color:var(--gris)">${d}/${m}</div>
     </div>`;
   }).join('');
-  const diasConRep=dias14.filter(f=>fechasRep.has(f)).length;
-  const diasSinRep=dias14.filter(f=>!fechasRep.has(f)&&f!==hoy()).length;
-  const ultimos7=[...dias14].reverse().slice(0,7).filter(f=>!fechasRep.has(f)&&f!==hoy());
+  const toDate=f=>{const[d,m,y]=f.split('/');return new Date(`${y}-${m}-${d}`);};
+  const fechasInicio=lotes.map(l=>l.fechaInicio).filter(Boolean);
+  const fechaMinima=fechasInicio.length>0?fechasInicio.reduce((min,f)=>toDate(f)<toDate(min)?f:min):hoy();
+  const diasValidos=dias14.filter(f=>toDate(f)>=toDate(fechaMinima));
+  const diasConRep=diasValidos.filter(f=>fechasRep.has(f)).length;
+  const diasSinRep=diasValidos.filter(f=>!fechasRep.has(f)&&f!==hoy()).length;
+  const ultimos7=[...diasValidos].reverse().slice(0,7).filter(f=>!fechasRep.has(f)&&f!==hoy());
   const alertaHtml=ultimos7.length>0
     ?`<div class="alerta-warn">⚠️ <b>${ultimos7.length} día${ultimos7.length!==1?'s':''} sin reporte</b> esta semana:<br><span style="font-size:0.68rem">${ultimos7.join(' · ')}</span></div>`
     :`<div class="alerta-ok">✅ Al día — Sin días faltantes esta semana</div>`;
@@ -766,6 +770,8 @@ function renderDashboard(){
       <div style="display:flex;justify-content:space-between;font-size:0.72rem;padding-top:8px;border-top:1.5px solid var(--border)">
         <span style="color:var(--verde);font-weight:700">✓ ${diasConRep} con reporte</span>
         <span style="color:var(--rojo);font-weight:700">✗ ${diasSinRep} sin reporte</span>
+        ${diasValidos.length<14?`<span style="color:var(--gris);font-size:0.65rem">Desde ${fechaMinima}</span>`:''}
+
       </div>
     </div>
     <div class="sec-label">📋 Cumplimiento de procesos</div>
