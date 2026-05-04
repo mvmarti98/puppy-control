@@ -3,33 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>PUPPY — Control de Lotes</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Sr Puppy — Control de Lotes</title>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <style>
 :root {
-  --v: #1B4332;
-  --v2: #2D6A4F;
-  --v3: #52B788;
-  --v4: #95D5B2;
-  --v5: #D8F3DC;
-  --crema: #F0EBE1;
-  --tierra: #8B5E3C;
-  --amarillo: #F4C430;
-  --rojo: #E63946;
-  --gris: #6B7280;
-  --gris2: #9CA3AF;
-  --dark: #0D1F16;
-  --blanco: #FFFFFF;
-  --card: #FFFFFF;
-  --border: #E5E7EB;
+  --v:       #1a6880;
+  --v2:      #0D4856;
+  --v3:      #44B25B;
+  --v4:      #A4D7E0;
+  --v5:      #E0F4F8;
+  --crema:   #F7EBD0;
+  --tierra:  #8B5E3C;
+  --amarillo:#FFBD39;
+  --rojo:    #E63946;
+  --gris:    #6B7280;
+  --gris2:   #9CA3AF;
+  --dark:    #0D4856;
+  --blanco:  #FFFFFF;
+  --card:    #FFFFFF;
+  --border:  #D6E8ED;
 }
 
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
 body {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Onest', sans-serif;
   background: var(--crema);
   color: var(--dark);
   min-height: 100vh;
@@ -47,7 +47,7 @@ body {
 }
 
 #splash .logo-big {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Onest', sans-serif;
   font-size: 3.5rem;
   font-weight: 800;
   color: var(--blanco);
@@ -79,7 +79,7 @@ body {
   border-radius: 16px;
   border: 2px solid transparent;
   cursor: pointer;
-  font-family: 'Syne', sans-serif;
+  font-family: 'Onest', sans-serif;
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: 1px;
@@ -117,7 +117,7 @@ body {
 }
 
 .header-logo {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Onest', sans-serif;
   font-size: 1.4rem;
   font-weight: 800;
   color: var(--blanco);
@@ -158,7 +158,7 @@ body {
   padding: 10px;
   border-radius: 10px;
   border: none;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Onest', sans-serif;
   font-size: 0.75rem;
   font-weight: 500;
   cursor: pointer;
@@ -206,7 +206,7 @@ body {
 }
 
 .lote-num {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Onest', sans-serif;
   font-size: 1.6rem;
   font-weight: 800;
   color: var(--v2);
@@ -214,7 +214,7 @@ body {
 }
 
 .lote-fecha {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Onest', monospace;
   font-size: 0.7rem;
   color: var(--gris);
 }
@@ -228,10 +228,10 @@ body {
   border-radius: 20px;
   text-transform: uppercase;
 }
-.badge-activo { background: #D1FAE5; color: #065F46; }
-.badge-proceso { background: #FEF3C7; color: #92400E; }
-.badge-listo { background: #DBEAFE; color: #1E40AF; }
-.badge-nuevo { background: var(--v5); color: var(--v2); }
+.badge-activo  { background: #D4EDDA; color: #1a6b30; }
+.badge-proceso { background: #FFF3CD; color: #8a6000; }
+.badge-listo   { background: #D0EEF5; color: #0D4856; }
+.badge-nuevo   { background: var(--v5); color: var(--v2); }
 
 /* PESO DISPLAY */
 .peso-row {
@@ -249,7 +249,7 @@ body {
 }
 
 .peso-val {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Onest', monospace;
   font-size: 1.2rem;
   font-weight: 500;
   color: var(--dark);
@@ -264,7 +264,7 @@ body {
 }
 
 .peso-diff {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Onest', monospace;
   font-size: 0.85rem;
   color: var(--v2);
   font-weight: 500;
@@ -341,7 +341,7 @@ body {
   padding: 14px 16px;
   border-radius: 12px;
   border: 1.5px solid var(--border);
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Onest', sans-serif;
   font-size: 1rem;
   background: var(--blanco);
   color: var(--dark);
@@ -353,7 +353,7 @@ body {
 .form-input:focus { border-color: var(--v3); }
 
 .form-input.big {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Onest', monospace;
   font-size: 1.8rem;
   text-align: center;
   font-weight: 500;
@@ -366,7 +366,7 @@ body {
   padding: 16px;
   border-radius: 14px;
   border: none;
-  font-family: 'Syne', sans-serif;
+  font-family: 'Onest', sans-serif;
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: 1px;
@@ -395,7 +395,7 @@ body {
 }
 
 .hist-date {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Onest', monospace;
   font-size: 0.72rem;
   color: var(--gris);
   min-width: 70px;
@@ -417,7 +417,7 @@ body {
 }
 
 .hist-peso {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Onest', monospace;
   font-size: 0.85rem;
   font-weight: 500;
   color: var(--v2);
@@ -486,7 +486,7 @@ body {
 }
 
 .modal-title {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Onest', sans-serif;
   font-size: 1.1rem;
   font-weight: 700;
   margin-bottom: 20px;
@@ -512,7 +512,7 @@ body {
   min-height: 4px;
 }
 
-.chart-bar-lbl { font-size: 0.55rem; color: var(--gris); font-family: 'DM Mono', monospace; }
+.chart-bar-lbl { font-size: 0.55rem; color: var(--gris); font-family: 'Onest', monospace; }
 
 /* SUPERVISOR STATS */
 .stats-row {
@@ -531,7 +531,7 @@ body {
 }
 
 .stat-mini-num {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Onest', sans-serif;
   font-size: 1.6rem;
   font-weight: 800;
   color: var(--v2);
@@ -561,7 +561,7 @@ body {
   padding: 10px;
   border-radius: 9px;
   border: none;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Onest', sans-serif;
   font-size: 0.78rem;
   font-weight: 500;
   cursor: pointer;
@@ -581,14 +581,14 @@ body {
 <body>
 
 <!-- LOADING OVERLAY -->
-<div id="loadingOverlay" style="position:fixed;inset:0;background:var(--dark);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:16px">
-  <div style="font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:white;letter-spacing:6px">PUP<span style="color:#52B788">PY</span></div>
-  <div style="color:#95D5B2;font-size:0.7rem;letter-spacing:3px;text-transform:uppercase">Conectando...</div>
+<div id="loadingOverlay" style="position:fixed;inset:0;background:#0D4856;display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:16px">
+  <div style="font-family:'Onest',sans-serif;font-size:2rem;font-weight:800;color:#F7EBD0;letter-spacing:2px">Sr Puppy</div>
+  <div style="color:#A4D7E0;font-size:0.7rem;letter-spacing:3px;text-transform:uppercase">Conectando...</div>
 </div>
 
 <!-- SPLASH -->
 <div id="splash">
-  <div class="logo-big">PUP<span>PY</span></div>
+  <div class="logo-big">Sr Puppy</div>
   <div class="tagline">Control de Lotes</div>
   <div class="role-cards">
     <button class="role-btn obrero" onclick="enterApp('obrero')">
@@ -605,7 +605,7 @@ body {
 <!-- APP -->
 <div id="app">
   <div class="app-header">
-    <div class="header-logo">PUP<span>PY</span></div>
+    <div class="header-logo">Sr Puppy</div>
     <div class="header-role" id="roleLabel">—</div>
   </div>
 
