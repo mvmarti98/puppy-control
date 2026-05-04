@@ -726,19 +726,27 @@ function renderDashboard(){
   const hoyD=new Date();const dias14=[];
   for(let i=13;i>=0;i--){const d=new Date(hoyD);d.setDate(d.getDate()-i);dias14.push(d.toLocaleDateString('es-DO',{day:'2-digit',month:'2-digit',year:'numeric'}));}
   const fechasRep=new Set();lotes.forEach(l=>l.registros.forEach(r=>fechasRep.add(r.fecha)));
-  const calHtml=dias14.map(fecha=>{
-    const tiene=fechasRep.has(fecha);const esHoy=fecha===hoy();const[d,m]=fecha.split('/');
-    return`<div style="text-align:center;flex:1">
-      <div style="width:26px;height:26px;border-radius:8px;margin:0 auto 3px;display:flex;align-items:center;justify-content:center;background:${tiene?'var(--verde)':esHoy?'rgba(255,189,57,0.2)':'var(--crema)'};border:2px solid ${esHoy?'var(--amarillo)':tiene?'var(--verde2)':'var(--border)'}">
-        <span style="font-size:0.7rem;color:${tiene?'white':esHoy?'var(--amarillo)':'var(--gris2)'}">${tiene?'✓':esHoy?'!':''}</span>
-      </div>
-      <div style="font-size:0.48rem;color:var(--gris)">${d}/${m}</div>
-    </div>`;
-  }).join('');
   const toDate=f=>{const[d,m,y]=f.split('/');return new Date(`${y}-${m}-${d}`);};
   const fechasInicio=lotes.map(l=>l.fechaInicio).filter(Boolean);
   const fechaMinima=fechasInicio.length>0?fechasInicio.reduce((min,f)=>toDate(f)<toDate(min)?f:min):hoy();
   const diasValidos=dias14.filter(f=>toDate(f)>=toDate(fechaMinima));
+  const calHtml=dias14.map(fecha=>{
+    const tiene=fechasRep.has(fecha);
+    const esHoy=fecha===hoy();
+    const valido=toDate(fecha)>=toDate(fechaMinima);
+    const[d,m]=fecha.split('/');
+    let bg,border,txt,txtColor;
+    if(!valido){bg='transparent';border='transparent';txt='';txtColor='transparent';}
+    else if(tiene){bg='var(--verde)';border='var(--verde2)';txt='✓';txtColor='white';}
+    else if(esHoy){bg='rgba(255,189,57,0.25)';border='var(--amarillo)';txt='●';txtColor='var(--amarillo)';}
+    else{bg='white';border='var(--border)';txt='';txtColor='var(--gris2)';}
+    return`<div style="text-align:center;flex:1;min-width:0">
+      <div style="width:28px;height:28px;border-radius:8px;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;background:${bg};border:2px solid ${border}">
+        <span style="font-size:0.75rem;color:${txtColor};font-weight:700">${txt}</span>
+      </div>
+      <div style="font-size:0.48rem;color:${valido?'var(--gris)':'transparent'};font-weight:${esHoy?'700':'400'}">${d}/${m}</div>
+    </div>`;
+  }).join('');
   const diasConRep=diasValidos.filter(f=>fechasRep.has(f)).length;
   const diasSinRep=diasValidos.filter(f=>!fechasRep.has(f)&&f!==hoy()).length;
   const ultimos7=[...diasValidos].reverse().slice(0,7).filter(f=>!fechasRep.has(f)&&f!==hoy());
@@ -767,11 +775,12 @@ function renderDashboard(){
     <div class="sec-label">📅 Reportes — últimos 14 días</div>
     <div class="card" style="margin-bottom:16px">
       <div style="display:flex;gap:2px;margin-bottom:8px">${calHtml}</div>
-      <div style="display:flex;justify-content:space-between;font-size:0.72rem;padding-top:8px;border-top:1.5px solid var(--border)">
-        <span style="color:var(--verde);font-weight:700">✓ ${diasConRep} con reporte</span>
-        <span style="color:var(--rojo);font-weight:700">✗ ${diasSinRep} sin reporte</span>
-        ${diasValidos.length<14?`<span style="color:var(--gris);font-size:0.65rem">Desde ${fechaMinima}</span>`:''}
-
+      <div style="padding-top:8px;border-top:1.5px solid var(--border)">
+        <div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:${diasValidos.length<14?'4px':'0'}">
+          <span style="color:var(--verde);font-weight:700">✓ ${diasConRep} con reporte</span>
+          <span style="color:${diasSinRep>0?'var(--rojo)':'var(--gris)'};font-weight:700">✗ ${diasSinRep} sin reporte</span>
+        </div>
+        ${diasValidos.length<14?`<div style="font-size:0.65rem;color:var(--gris)">Seguimiento desde el ${fechaMinima}</div>`:''}
       </div>
     </div>
     <div class="sec-label">📋 Cumplimiento de procesos</div>
