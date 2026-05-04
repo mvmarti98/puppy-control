@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>PUPPY — Control de Lotes</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <style>
 :root {
   --v: #1B4332;
@@ -578,6 +580,12 @@ body {
 </head>
 <body>
 
+<!-- LOADING OVERLAY -->
+<div id="loadingOverlay" style="position:fixed;inset:0;background:var(--dark);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:16px">
+  <div style="font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:white;letter-spacing:6px">PUP<span style="color:#52B788">PY</span></div>
+  <div style="color:#95D5B2;font-size:0.7rem;letter-spacing:3px;text-transform:uppercase">Conectando...</div>
+</div>
+
 <!-- SPLASH -->
 <div id="splash">
   <div class="logo-big">PUP<span>PY</span></div>
@@ -731,19 +739,58 @@ body {
 <div id="toast">✓ Guardado</div>
 
 <script>
+// ─── FIREBASE CONFIG ─────────────────────────────────────────
+// PASO 1: Reemplaza estos valores con los de tu proyecto Firebase
+const firebaseConfig = {
+  apiKey:            "TU_API_KEY",
+  authDomain:        "TU_PROYECTO.firebaseapp.com",
+  databaseURL:       "https://TU_PROYECTO-default-rtdb.firebaseio.com",
+  projectId:         "TU_PROYECTO_ID",
+  storageBucket:     "TU_PROYECTO.appspot.com",
+  messagingSenderId: "TU_SENDER_ID",
+  appId:             "TU_APP_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+const fireDB  = firebase.database();
+const fireRef = fireDB.ref('puppyDB');
+
 // ─── STATE ────────────────────────────────────────────────────
 let currentRole = null;
 let selectedLoteId = null;
 let pasosSeleccionados = [];
+let memoryDB = { lotes: [] };
+
+// Escucha cambios en tiempo real desde Firebase
+fireRef.on('value', (snapshot) => {
+  memoryDB = snapshot.val() || { lotes: [] };
+  document.getElementById('loadingOverlay').style.display = 'none';
+  refreshCurrentView();
+}, (error) => {
+  document.getElementById('loadingOverlay').innerHTML =
+    '<div style="color:#E63946;font-family:\'DM Sans\',sans-serif;padding:24px;text-align:center">⚠️ Error conectando a Firebase.<br><small style="color:#9CA3AF">Verifica tu configuración.</small></div>';
+});
 
 // Storage helpers
 function getDB() {
-  try { return JSON.parse(localStorage.getItem('puppyDB') || '{"lotes":[]}'); }
-  catch { return { lotes: [] }; }
+  return JSON.parse(JSON.stringify(memoryDB));
 }
 
 function saveDB(db) {
-  localStorage.setItem('puppyDB', JSON.stringify(db));
+  memoryDB = db;
+  fireRef.set(db);
+}
+
+// Re-renderiza la vista activa cuando Firebase notifica un cambio
+function refreshCurrentView() {
+  if (!currentRole) return;
+  if (currentRole === 'obrero') {
+    renderLoteSelector();
+    renderLotesObrero();
+  } else {
+    renderDashboard();
+    renderSupLotes();
+  }
 }
 
 function genId() { return Date.now().toString(36) + Math.random().toString(36).substr(2,4); }
