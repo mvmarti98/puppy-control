@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Sr Puppy — Producción</title>
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <style>
 :root {
   --crema:   #F7EBD0;
@@ -217,6 +219,12 @@ body{font-family:'Onest',sans-serif;background:var(--crema);color:var(--azul);mi
 </head>
 <body>
 
+<!-- LOADING OVERLAY -->
+<div id="loadingOverlay" style="position:fixed;inset:0;background:#0D4856;display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:16px">
+  <div style="font-family:'Onest',sans-serif;font-size:2.5rem;font-weight:800;color:white;letter-spacing:4px">SR PUPPY</div>
+  <div style="color:#A4D7E0;font-size:0.7rem;letter-spacing:3px;text-transform:uppercase">Conectando...</div>
+</div>
+
 <!-- SPLASH -->
 <div id="splash">
   <div class="splash-logo">
@@ -372,9 +380,37 @@ const RANGOS = {
 };
 
 let currentRole=null, selectedLoteId=null, pasosSeleccionados=[], gramasNuevo=[{peso:'',tamano:''}], loteAEliminar=null;
+let memoryDB={lotes:[]};
 
-function getDB(){try{return JSON.parse(localStorage.getItem('srpuppyDB')||'{"lotes":[]}')}catch{return{lotes:[]}}}
-function saveDB(db){localStorage.setItem('srpuppyDB',JSON.stringify(db))}
+// ─── FIREBASE ────────────────────────────────────────────────
+const firebaseConfig={
+  apiKey:"AIzaSyB6xGdQe8dRyF7ZTC3ovT5jCuxdD3H3RAc",
+  authDomain:"srpuppy-control.firebaseapp.com",
+  databaseURL:"https://srpuppy-control-default-rtdb.firebaseio.com",
+  projectId:"srpuppy-control",
+  storageBucket:"srpuppy-control.firebasestorage.app",
+  messagingSenderId:"318146090221",
+  appId:"1:318146090221:web:ef6d72e7715f99038c28e4"
+};
+firebase.initializeApp(firebaseConfig);
+const fireRef=firebase.database().ref('srpuppyDB');
+
+fireRef.on('value',(snap)=>{
+  memoryDB=snap.val()||{lotes:[]};
+  document.getElementById('loadingOverlay').style.display='none';
+  refreshCurrentView();
+},(err)=>{
+  document.getElementById('loadingOverlay').innerHTML='<div style="color:#FFBD39;font-family:\'Onest\',sans-serif;padding:24px;text-align:center">⚠️ Error conectando.<br><small style="color:#A4D7E0">Verifica tu conexión.</small></div>';
+});
+
+function getDB(){return JSON.parse(JSON.stringify(memoryDB));}
+function saveDB(db){memoryDB=db;fireRef.set(db);}
+
+function refreshCurrentView(){
+  if(!currentRole)return;
+  if(currentRole==='obrero'){renderLoteSelector();renderLotesObrero();renderInventario('inventarioObrero');}
+  else{renderDashboard();renderSupLotes();renderInventario('inventarioSup');}
+}
 function genId(){return Date.now().toString(36)+Math.random().toString(36).substr(2,5)}
 function hoy(){return new Date().toLocaleDateString('es-DO',{day:'2-digit',month:'2-digit',year:'numeric'})}
 
