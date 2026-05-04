@@ -395,8 +395,21 @@ const firebaseConfig={
 firebase.initializeApp(firebaseConfig);
 const fireRef=firebase.database().ref('srpuppyDB');
 
+function normalizeDB(data){
+  if(!data)return{lotes:[]};
+  if(data.lotes&&!Array.isArray(data.lotes))data.lotes=Object.values(data.lotes);
+  data.lotes=(data.lotes||[]).map(l=>{
+    if(l.registros&&!Array.isArray(l.registros))l.registros=Object.values(l.registros);
+    if(l.gramas&&!Array.isArray(l.gramas))l.gramas=Object.values(l.gramas);
+    l.registros=l.registros||[];
+    l.gramas=l.gramas||[];
+    return l;
+  });
+  return data;
+}
+
 fireRef.on('value',(snap)=>{
-  memoryDB=snap.val()||{lotes:[]};
+  memoryDB=normalizeDB(snap.val());
   document.getElementById('loadingOverlay').style.display='none';
   refreshCurrentView();
 },(err)=>{
